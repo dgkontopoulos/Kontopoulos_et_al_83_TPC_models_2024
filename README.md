@@ -1,3 +1,7 @@
+<center>
+[![DOI](https://zenodo.org/badge/688868849.svg)](https://zenodo.org/badge/latestdoi/688868849)
+</center>
+
 This repository contains code that reproduces the main analyses of the following study:
 
 >Dimitrios - Georgios Kontopoulos, Arnaud Sentis, Martin Daufresne, Anthony I. Dell, and Samraat Pawar: **No model to rule them all: a systematic comparison of 83 thermal performance curve models across traits and taxonomic groups**. 2023. [Submitted]
