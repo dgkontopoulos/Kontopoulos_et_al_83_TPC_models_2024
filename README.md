@@ -1,6 +1,4 @@
-<center>
 [![DOI](https://zenodo.org/badge/688868849.svg)](https://zenodo.org/badge/latestdoi/688868849)
-</center>
 
 This repository contains code that reproduces the main analyses of the following study:
 
