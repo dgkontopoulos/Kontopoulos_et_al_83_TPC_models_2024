@@ -3,6 +3,15 @@
 # This script handles the fitting of TPC models to thermal performance 
 # datasets, as well as the calculation of R-squared, AICc weights, and 
 # dataset-specific distance matrices among model fits.
+#
+# The script requires a command-line argument to determine if models
+# will be fitted to trait or enzyme data:
+#
+# ./TPC_fitting_pipeline.R traits
+#
+# OR
+#
+# ./TPC_fitting_pipeline.R enzymes
 
 library(doParallel)
 library(minpack.lm)
@@ -119,7 +128,7 @@ calculate_distance_matrix_across_model_fits <- function(
 }
 
 # This function fits each of the 83 models to a thermal performance dataset.
-fit_models <- function(dataset, ID)
+fit_models <- function(dataset, ID, data_type)
 {
 	fitting_status <- NA
 	
@@ -226,13 +235,24 @@ fit_models <- function(dataset, ID)
 			dist_matrix <- calculate_distance_matrix_across_model_fits(
 				fitted_models, model_list, dataset, R_squared_vals
 			)
-		
-			save(
-				dataset, fitted_models, AICc_weights, R_squared_vals,
-				dist_matrix, file = paste(
-					'../Results/model_fits/', ID, '.Rda', sep = ''
+
+			if ( data_type == 'traits' )
+			{
+				save(
+					dataset, fitted_models, AICc_weights, R_squared_vals,
+					dist_matrix, file = paste(
+						'../Results/model_fits/', ID, '.Rda', sep = ''
+					)
 				)
-			)
+			} else if ( data_type == 'enzymes' )
+			{
+				save(
+					dataset, fitted_models, AICc_weights, R_squared_vals,
+					dist_matrix, file = paste(
+						'../Results/enzyme_model_fits/', ID, '.Rda', sep = ''
+					)
+				)
+			}
 			break
 		}
 	}
@@ -479,8 +499,25 @@ split_data <- function(dataset)
 # M A I N  C O D E #
 ####################
 
+# Check if there is a command-line argument of 'traits' or 'enzymes'.
+# Otherwise, exit.
+args <- commandArgs(TRUE)
+if ( length(args) == 0 )
+{
+	stop("Usage: ./TPC_fitting_pipeline.R traits OR ./TPC_fitting_pipeline.R enzymes")
+} else
+{
+	data_type <- args[1]
+}
+
 # Read all the thermal performance datasets.
-all_data <- read.csv('../Data/thermal_performance_datasets.csv', stringsAsFactors = FALSE)
+if ( data_type == 'traits' )
+{
+	all_data <- read.csv('../Data/thermal_performance_datasets.csv', stringsAsFactors = FALSE)
+} else if ( data_type == 'enzymes' )
+{
+	all_data <- read.csv('../Data/enzyme_thermal_performance_datasets.csv', stringsAsFactors = FALSE)
+}
 
 # Separate the datasets by id.
 split_dataset <- split_data(all_data)
@@ -504,13 +541,23 @@ for ( i in 1:length(split_dataset) )
 	results_summary$ID[i] <- split_dataset[[i]]$id[1]
 
 	results_summary$outcome[i] <- fit_models(
-		split_dataset[[i]], split_dataset[[i]]$id[1]
+		split_dataset[[i]], split_dataset[[i]]$id[1],
+		data_type
 	)
 	gc()
 }
 
 # Write the fitting results to an output file.
-write.csv(
-	results_summary, file = '../Results/results_summary.csv', 
-	row.names = FALSE
+if ( data_type == 'traits' )
+{
+	write.csv(
+		results_summary, file = '../Results/results_summary.csv',
+		row.names = FALSE
 )
+} else if ( data_type == 'enzymes' )
+{
+	write.csv(
+		results_summary, file = '../Results/enzyme_results_summary.csv',
+		row.names = FALSE
+	)
+}
