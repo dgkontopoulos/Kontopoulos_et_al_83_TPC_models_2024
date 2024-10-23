@@ -2,7 +2,7 @@
 
 This repository contains code that reproduces the main analyses of the following study:
 
->Dimitrios - Georgios Kontopoulos, Arnaud Sentis, Martin Daufresne, Natalia Glazman, Anthony I. Dell, and Samraat Pawar: **No model to rule them all: a systematic comparison of 83 thermal performance curve models across traits and taxonomic groups**. 2024. [Submitted]
+>Dimitrios - Georgios Kontopoulos, Arnaud Sentis, Martin Daufresne, Natalia Glazman, Anthony I. Dell, and Samraat Pawar: <a href='https://doi.org/10.1038/s41467-024-53046-2'>**No universal mathematical model for thermal performance curves across traits and taxonomic groups**</a>. <i>Nature Communications</i> 15, 8855 (2024).
 
 ---
  
